@@ -19,8 +19,7 @@ package com.twj.hotfixapp.reporter;
 import com.tencent.tinker.lib.util.TinkerLog;
 import com.tencent.tinker.loader.shareutil.ShareConstants;
 import com.tencent.tinker.loader.shareutil.ShareTinkerInternals;
-
-import tinker.sample.android.util.Utils;
+import com.twj.hotfixapp.util.Utils;
 
 /**
  * a simple tinker data reporter

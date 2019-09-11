@@ -25,13 +25,13 @@ import com.tencent.tinker.lib.util.TinkerLog;
 import com.tencent.tinker.loader.shareutil.ShareConstants;
 import com.tencent.tinker.loader.shareutil.SharePatchFileUtil;
 import com.tencent.tinker.loader.shareutil.ShareTinkerInternals;
+import com.twj.hotfixapp.app.BuildInfo;
+import com.twj.hotfixapp.crash.SampleUncaughtExceptionHandler;
+import com.twj.hotfixapp.util.Utils;
 
 import java.io.File;
 import java.util.Properties;
 
-import tinker.sample.android.app.BuildInfo;
-import tinker.sample.android.crash.SampleUncaughtExceptionHandler;
-import tinker.sample.android.util.Utils;
 
 /**
  * Created by zhangshaowen on 16/4/30.
