@@ -17,18 +17,77 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    defaultConfig {
+        applicationId "tinker.sample.android"
+        minSdkVersion 14
+        targetSdkVersion 26
+        versionCode 1
+        versionName "1.0.0"
+        /**
+         * you can use multiDex and install it in your ApplicationLifeCycle implement
+         */
+        multiDexEnabled true
+        /**
+         * buildConfig can change during patch!
+         * we can use the newly value when patch
+         */
+        buildConfigField "String", "MESSAGE", "\"I am the base apk\""
+//        buildConfigField "String", "MESSAGE", "\"I am the patch apk\""
+        /**
+         * client version would update with patch
+         * so we can get the newly git version easily!
+         */
+        buildConfigField "String", "TINKER_ID", "\"${getTinkerIdValue()}\""
+        buildConfigField "String", "PLATFORM", "\"all\""
+    }
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.android.support:appcompat-v7:28.0.0'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    if (is_gradle_3()) {
+        implementation fileTree(dir: 'libs', include: ['*.jar'])
+        testImplementation 'junit:junit:4.12'
+        implementation "com.android.support:appcompat-v7:23.1.1"
+        api("com.tencent.tinker:tinker-android-lib:${TINKER_VERSION}") { changing = true }
 
-    //optional, help to generate the final application
-    provided('com.tencent.tinker:tinker-android-anno:1.9.1')
-    //tinker's main Android lib
-    compile('com.tencent.tinker:tinker-android-lib:1.9.1')
+        // Maven local cannot handle transist dependencies.
+        implementation("com.tencent.tinker:tinker-android-loader:${TINKER_VERSION}") { changing = true }
+
+        annotationProcessor("com.tencent.tinker:tinker-android-anno:${TINKER_VERSION}") { changing = true }
+        compileOnly("com.tencent.tinker:tinker-android-anno:${TINKER_VERSION}") { changing = true }
+
+        implementation "com.android.support:multidex:1.0.1"
+        //use to test multiDex
+//    implementation group: 'com.google.guava', name: 'guava', version: '19.0'
+//    implementation "org.scala-lang:scala-library:2.11.7"
+    } else {
+        compile fileTree(dir: 'libs', include: ['*.jar'])
+        testCompile 'junit:junit:4.12'
+        compile "com.android.support:appcompat-v7:23.1.1"
+        compile("com.tencent.tinker:tinker-android-lib:${TINKER_VERSION}") { changing = true }
+        provided("com.tencent.tinker:tinker-android-anno:${TINKER_VERSION}") { changing = true }
+
+        compile "com.android.support:multidex:1.0.1"
+
+        //use to test multiDex
+//    compile group: 'com.google.guava', name: 'guava', version: '19.0'
+//    compile "org.scala-lang:scala-library:2.11.7"
+    }
+}
+
+
+def getTinkerIdValue() {
+    return hasProperty("TINKER_ID") ? TINKER_ID : gitSha()
+}
+
+def gitSha() {
+    try {
+        String gitRev = 'git rev-parse --short HEAD'.execute(null, project.rootDir).text.trim()
+        if (gitRev == null) {
+            throw new GradleException("can't get git rev, you should add git to system path or just input test value, such as 'testTinkerId'")
+        }
+        return gitRev
+    } catch (Exception e) {
+        throw new GradleException("can't get git rev, you should add git to system path or just input test value, such as 'testTinkerId'")
+    }
 }

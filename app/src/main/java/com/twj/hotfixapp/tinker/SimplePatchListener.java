@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.tencent.tinker.lib.listener.DefaultPatchListener;
 import com.tencent.tinker.loader.shareutil.ShareConstants;
-import com.twj.hotfixapp.utils.MD5Utils;
+import com.twj.hotfixapp.util.MD5Utils;
 
 /**
  * Description ：

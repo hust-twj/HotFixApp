@@ -1,4 +1,4 @@
-package com.twj.hotfixapp.utils;
+package com.twj.hotfixapp.util;
 
 import java.io.File;
 import java.io.FileInputStream;
